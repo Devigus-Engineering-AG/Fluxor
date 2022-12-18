@@ -12,10 +12,10 @@ namespace Fluxor
 	{
 		private readonly object SyncRoot = new();
 		private readonly Queue<object> QueuedActions = new Queue<object>();
-		private EventHandler<ActionDispatchedEventArgs> _ActionDispatched;
+		private EventHandler<ActionDispatchedEventArgs>? _ActionDispatched;
 
 		/// <see cref="IDispatcher.ActionDispatched"/>
-		public event EventHandler<ActionDispatchedEventArgs> ActionDispatched
+		public event EventHandler<ActionDispatchedEventArgs>? ActionDispatched
 		{
 			add
 			{
@@ -53,7 +53,7 @@ namespace Fluxor
 		private void DequeueActions()
 		{
 			foreach (object queuedAction in QueuedActions)
-				_ActionDispatched(this, new ActionDispatchedEventArgs(queuedAction));
+				_ActionDispatched?.Invoke(this, new ActionDispatchedEventArgs(queuedAction));
 		}
 	}
 }

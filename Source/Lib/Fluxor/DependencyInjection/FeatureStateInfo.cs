@@ -35,7 +35,7 @@ namespace Fluxor.DependencyInjection
 		private Func<object> CreateFactoryFromParameterlessConstructor(
 			FeatureStateAttribute featureStateAttribute)
 		{
-			ConstructorInfo constructor = StateType.GetConstructor(
+			ConstructorInfo? constructor = StateType.GetConstructor(
 				BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
 				binder: null,
 				CallingConventions.HasThis,
@@ -50,14 +50,14 @@ namespace Fluxor.DependencyInjection
 					+ $" {nameof(FeatureStateAttribute.CreateInitialStateMethodName)} property on the "
 					+ $" {nameof(FeatureStateAttribute)}");
 
-			return () => Activator.CreateInstance(StateType, nonPublic: true);
+			return () => Activator.CreateInstance(StateType, nonPublic: true)!;
 		}
 
 		private Func<object> CreateFactoryFromStateMethod(FeatureStateAttribute featureStateAttribute)
 		{
-			MethodInfo result =
+			MethodInfo? result =
 				StateType.GetMethod(
-					name: featureStateAttribute.CreateInitialStateMethodName,
+					name: featureStateAttribute.CreateInitialStateMethodName!,
 					bindingAttr: BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
 
 			if (result?.ReturnType != StateType)

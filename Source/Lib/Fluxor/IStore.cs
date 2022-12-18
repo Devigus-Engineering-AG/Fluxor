@@ -92,6 +92,6 @@ namespace Fluxor
 		/// <summary>
 		/// Executed when an exception is not handled
 		/// </summary>
-		event EventHandler<Exceptions.UnhandledExceptionEventArgs> UnhandledException;
+		event EventHandler<Exceptions.UnhandledExceptionEventArgs>? UnhandledException;
 	}
 }

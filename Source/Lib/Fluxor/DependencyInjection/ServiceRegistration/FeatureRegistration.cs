@@ -43,17 +43,22 @@ namespace Fluxor.DependencyInjection.ServiceRegistration
 				options);
 		}
 
-		private static void RegisterFeatureClassInfos(IServiceCollection services, FeatureClassInfo[] featureClassInfos, Dictionary<Type, IGrouping<Type, ReducerClassInfo>> reducerClassInfoByStateType, Dictionary<Type, IGrouping<Type, ReducerMethodInfo>> reducerMethodInfoByStateType, FluxorOptions options)
+		private static void RegisterFeatureClassInfos(
+			IServiceCollection services,
+			FeatureClassInfo[] featureClassInfos,
+			Dictionary<Type, IGrouping<Type, ReducerClassInfo>> reducerClassInfoByStateType,
+			Dictionary<Type, IGrouping<Type, ReducerMethodInfo>> reducerMethodInfoByStateType,
+			FluxorOptions options)
 		{
 			foreach (FeatureClassInfo info in featureClassInfos)
 			{
 				reducerClassInfoByStateType.TryGetValue(
 					info.StateType,
-					out IGrouping<Type, ReducerClassInfo> reducerClassInfosForStateType);
+					out IGrouping<Type, ReducerClassInfo>? reducerClassInfosForStateType);
 
 				reducerMethodInfoByStateType.TryGetValue(
 					info.StateType,
-					out IGrouping<Type, ReducerMethodInfo> reducerMethodInfosForStateType);
+					out IGrouping<Type, ReducerMethodInfo>? reducerMethodInfosForStateType);
 
 				// Register the implementing type so we can get an instance from the service provider
 				services.Add(info.ImplementingType, options);
@@ -63,7 +68,7 @@ namespace Fluxor.DependencyInjection.ServiceRegistration
 				{
 					// Create an instance of the implementing type
 					var featureInstance =
-						(IFeature)serviceProvider.GetService(info.ImplementingType);
+						(IFeature)serviceProvider.GetRequiredService(info.ImplementingType);
 
 					AddReducers(
 						serviceProvider,
@@ -81,7 +86,7 @@ namespace Fluxor.DependencyInjection.ServiceRegistration
 		{
 			string addReducerMethodName = nameof(IFeature<object>.AddReducer);
 			MethodInfo featureAddReducerMethodInfo =
-				featureImplementingType.GetMethod(addReducerMethodName);
+				featureImplementingType.GetMethod(addReducerMethodName)!;
 			return featureAddReducerMethodInfo;
 
 		}
@@ -97,40 +102,42 @@ namespace Fluxor.DependencyInjection.ServiceRegistration
 			{
 				reducerClassInfoByStateType.TryGetValue(
 					info.StateType,
-					out IGrouping<Type, ReducerClassInfo> reducerClassInfosForStateType);
+					out IGrouping<Type, ReducerClassInfo>? reducerClassInfosForStateType);
 
 				reducerMethodInfoByStateType.TryGetValue(
 					info.StateType,
-					out IGrouping<Type, ReducerMethodInfo> reducerMethodInfosForStateType);
+					out IGrouping<Type, ReducerMethodInfo>? reducerMethodInfosForStateType);
 
 				// Register a factory for the feature's interface
-				services.Add(info.FeatureInterfaceGenericType, serviceProvider =>
-				{
-					// Create an instance of the implementing type
-					ConstructorInfo featureConstructor =
-					info.FeatureWrapperGenericType.GetConstructor(
-						new Type[] { typeof(FeatureStateInfo) });
+				services.Add(
+					info.FeatureInterfaceGenericType,
+					serviceProvider =>
+					{
+						// Create an instance of the implementing type
+						ConstructorInfo featureConstructor =
+						info.FeatureWrapperGenericType.GetConstructor(
+							new Type[] { typeof(FeatureStateInfo) })!;
 
-					var featureInstance =
-						(IFeature)featureConstructor.Invoke(new object[] { info });
+						var featureInstance =
+							(IFeature)featureConstructor.Invoke(new object[] { info });
 
-					AddReducers(
-						serviceProvider,
-						featureInstance,
-						reducerClassInfosForStateType,
-						reducerMethodInfosForStateType);
+						AddReducers(
+							serviceProvider,
+							featureInstance,
+							reducerClassInfosForStateType,
+							reducerMethodInfosForStateType);
 
-					return featureInstance;
-				},
-				options);
+						return featureInstance;
+					},
+					options);
 			}
 		}
 
 		private static void AddReducers(
 			IServiceProvider serviceProvider,
 			IFeature featureInstance,
-			IEnumerable<ReducerClassInfo> reducerClassInfosForStateType,
-			IEnumerable<ReducerMethodInfo> reducerMethodInfosForStateType)
+			IEnumerable<ReducerClassInfo>? reducerClassInfosForStateType,
+			IEnumerable<ReducerMethodInfo>? reducerMethodInfosForStateType)
 		{
 			MethodInfo featureAddReducerMethodInfo = GetAddReducerMethod(featureInstance.GetType());
 
@@ -138,7 +145,7 @@ namespace Fluxor.DependencyInjection.ServiceRegistration
 			{
 				foreach (ReducerClassInfo reducerClass in reducerClassInfosForStateType)
 				{
-					object reducerInstance = serviceProvider.GetService(reducerClass.ImplementingType);
+					object reducerInstance = serviceProvider.GetRequiredService(reducerClass.ImplementingType);
 					featureAddReducerMethodInfo.Invoke(featureInstance, new object[] { reducerInstance });
 				}
 			}

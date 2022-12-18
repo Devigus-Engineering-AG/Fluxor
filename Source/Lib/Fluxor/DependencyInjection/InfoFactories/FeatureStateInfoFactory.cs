@@ -19,7 +19,7 @@ namespace Fluxor.DependencyInjection.InfoFactories
 					FeatureStateAttribute = x.GetCustomAttribute<FeatureStateAttribute>()
 				})
 				.Where(x => x.FeatureStateAttribute is not null)
-				.Select(x => new FeatureStateInfo(x.FeatureStateAttribute, x.Type))
+				.Select(x => new FeatureStateInfo(x.FeatureStateAttribute!, x.Type))
 				.ToArray();
 	}
 }

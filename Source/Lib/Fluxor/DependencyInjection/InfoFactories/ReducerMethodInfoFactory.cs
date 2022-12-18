@@ -23,7 +23,7 @@ namespace Fluxor.DependencyInjection.InfoFactories
 				.Where(x => x.ReducerAttribute is not null)
 				.Select(x => new ReducerMethodInfo(
 					x.HostClassType,
-					x.ReducerAttribute,
+					x.ReducerAttribute!,
 					x.MethodInfo))
 				.ToArray();
 	}

@@ -26,7 +26,7 @@ namespace Fluxor
 		/// The current state of the feature
 		/// </summary>
 		/// <returns>The current state of the feature</returns>
-		object GetState();
+		object? GetState();
 
 		/// <summary>
 		/// Identifies which class type the state should be. This is useful for

@@ -11,7 +11,7 @@ namespace Fluxor.UnsupportedClasses
 		private volatile bool InvokingSuspended;
 		private DateTime LastInvokeTime;
 		private readonly Action Action;
-		private Timer ThrottleTimer;
+		private Timer? ThrottleTimer;
 
 		public ThrottledInvoker(Action action)
 		{

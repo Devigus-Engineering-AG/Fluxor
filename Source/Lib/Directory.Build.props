@@ -10,6 +10,7 @@
 		<Copyright>Peter Morris</Copyright>
 		<PackageLicenseFile></PackageLicenseFile>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<Nullable>enable</Nullable>
 
 		<PackageProjectUrl>https://github.com/mrpmorris/Fluxor</PackageProjectUrl>
 		<PackageIconUrl />

@@ -10,7 +10,7 @@ namespace Fluxor.Extensions
 			if (methodInfo is null)
 				throw new ArgumentNullException(nameof(methodInfo));
 
-			return $"Method \"{methodInfo.Name}\" on class \"{methodInfo.DeclaringType.FullName}\"";
+			return $"Method \"{methodInfo.Name}\" on class \"{methodInfo.DeclaringType!.FullName}\"";
 		}
 	}
 }

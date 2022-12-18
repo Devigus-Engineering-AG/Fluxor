@@ -16,8 +16,8 @@ namespace Fluxor
 		private bool HasSetSelector;
 		private TValue PreviousValue;
 		private Func<TState, TValue> Selector;
-		private Action<TValue> SelectedValueChangedAction;
-		private Func<TValue, TValue, bool> ValueEquals;
+		private Action<TValue>? SelectedValueChangedAction;
+		private Func<TValue, TValue, bool>? ValueEquals;
 		private bool ShouldBeSubscribedToFeature =>
 			_selectedValueChanged is not null
 			|| _stateChanged is not null;
@@ -43,8 +43,8 @@ namespace Fluxor
 		/// <see cref="IStateSelection{TState, TValue}.Select(Func{TState, TValue}, Func{TValue, TValue, bool}))"/>
 		public void Select(
 			Func<TState, TValue> selector,
-			Func<TValue, TValue, bool> valueEquals = null,
-			Action<TValue> selectedValueChanged = null)
+			Func<TValue, TValue, bool>? valueEquals = null,
+			Action<TValue>? selectedValueChanged = null)
 		{
 			if (selector is null)
 				throw new ArgumentNullException(nameof(selector));
@@ -67,9 +67,9 @@ namespace Fluxor
 			}
 		}
 
-		private EventHandler<TValue> _selectedValueChanged;
+		private EventHandler<TValue>? _selectedValueChanged;
 		/// <see cref="IStateSelection{TState, TValue}.SelectedValueChanged"/>
-		public event EventHandler<TValue> SelectedValueChanged
+		public event EventHandler<TValue>? SelectedValueChanged
 		{
 			add
 			{
@@ -92,9 +92,9 @@ namespace Fluxor
 			}
 		}
 
-		private EventHandler _stateChanged;
+		private EventHandler? _stateChanged;
 		/// <see cref="IStateChangedNotifier.StateChanged"/>
-		public event EventHandler StateChanged
+		public event EventHandler? StateChanged
 		{
 			add
 			{
@@ -117,13 +117,13 @@ namespace Fluxor
 			}
 		}
 
-		private void FeatureStateChanged(object sender, EventArgs e)
+		private void FeatureStateChanged(object? sender, EventArgs e)
 		{
 			if (!HasSetSelector)
 				return;
 
 			TValue newValue = Selector(Feature.State);
-			if (ValueEquals(newValue, PreviousValue))
+			if (ValueEquals?.Invoke(newValue, PreviousValue) == true)
 				return;
 			PreviousValue = newValue;
 

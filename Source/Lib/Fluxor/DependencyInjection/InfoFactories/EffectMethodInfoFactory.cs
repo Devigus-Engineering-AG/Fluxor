@@ -23,7 +23,7 @@ namespace Fluxor.DependencyInjection.InfoFactories
 				.Select(x =>
 					new EffectMethodInfo(
 						x.HostClassType,
-						x.EffectAttribute, 
+						x.EffectAttribute!, 
 						x.MethodInfo))
 				.ToArray();
 	}

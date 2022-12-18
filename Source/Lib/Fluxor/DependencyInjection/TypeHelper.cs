@@ -4,7 +4,7 @@ namespace Fluxor
 {
 	internal static class TypeHelper
 	{
-		internal static Type[] GetGenericParametersForImplementedInterface(Type implementingType, Type genericInterfaceRequired)
+		internal static Type[]? GetGenericParametersForImplementedInterface(Type implementingType, Type genericInterfaceRequired)
 		{
 			foreach(Type interfaceType in implementingType.GetInterfaces())
 			{

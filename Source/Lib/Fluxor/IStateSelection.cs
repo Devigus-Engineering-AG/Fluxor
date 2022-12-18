@@ -26,13 +26,13 @@ namespace Fluxor
 		/// </param>
 		void Select(
 			Func<TState, TValue> selector,
-			Func<TValue, TValue, bool> valueEquals = null,
-			Action<TValue> selectedValueChanged = null);
+			Func<TValue, TValue, bool>? valueEquals = null,
+			Action<TValue>? selectedValueChanged = null);
 
 		/// <summary>
 		/// Event that is triggered whenever the selected value
 		/// within the state changes
 		/// </summary>
-		event EventHandler<TValue> SelectedValueChanged;
+		event EventHandler<TValue>? SelectedValueChanged;
 	}
 }

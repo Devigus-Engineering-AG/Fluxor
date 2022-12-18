@@ -59,7 +59,7 @@ namespace Fluxor
 		private static IEnumerable<PropertyInfo> GetStateChangedNotifierProperties(Type t) =>
 			t == typeof(object)
 			? Enumerable.Empty<PropertyInfo>()
-			: GetStateChangedNotifierProperties(t.BaseType)
+			: GetStateChangedNotifierProperties(t.BaseType!)
 				.Union(
 					t.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly)
 						.Where(p => typeof(IStateChangedNotifier).IsAssignableFrom(p.PropertyType))
@@ -75,9 +75,9 @@ namespace Fluxor
 				foreach (PropertyInfo currentProperty in stateChangedNotifierProperties)
 				{
 					Type getterMethod = typeof(Func<,>).MakeGenericType(type, currentProperty.PropertyType);
-					var stronglyTypedDelegate = Delegate.CreateDelegate(getterMethod, currentProperty.GetGetMethod(true));
+					var stronglyTypedDelegate = Delegate.CreateDelegate(getterMethod, currentProperty.GetGetMethod(true)!)!;
 					var getValueDelegate = new GetStateChangedPropertyDelegate(
-						x => (IStateChangedNotifier)stronglyTypedDelegate.DynamicInvoke(x));
+						x => (IStateChangedNotifier)stronglyTypedDelegate.DynamicInvoke(x)!)!;
 					delegates.Add(getValueDelegate);
 				}
 

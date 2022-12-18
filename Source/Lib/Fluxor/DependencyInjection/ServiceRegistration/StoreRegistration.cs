@@ -33,48 +33,49 @@ namespace Fluxor.DependencyInjection.ServiceRegistration
 
 			services.Add<IDispatcher, Dispatcher>(options);
 			// Register IActionSubscriber as an alias to Store
-			services.Add<IActionSubscriber>(serviceProvider => serviceProvider.GetService<Store>(), options);
+			services.Add<IActionSubscriber>(serviceProvider => serviceProvider.GetRequiredService<Store>(), options);
 			// Register IStore as an alias to Store
-			services.Add<IStore>(serviceProvider => serviceProvider.GetService<Store>(), options);
+			services.Add<IStore>(serviceProvider => serviceProvider.GetRequiredService<Store>(), options);
 
 			// Register a custom factory for building IStore that will inject all effects
-			services.Add(typeof(Store), serviceProvider =>
-			{
-				var dispatcher = serviceProvider.GetService<IDispatcher>();
-				var store = new Store(dispatcher);
-				foreach (FeatureClassInfo featureClassInfo in featureClassInfos)
+			services.Add(typeof(Store),
+				serviceProvider =>
 				{
-					var feature = (IFeature)serviceProvider.GetService(featureClassInfo.FeatureInterfaceGenericType);
-					store.AddFeature(feature);
-				}
+					var dispatcher = serviceProvider.GetRequiredService<IDispatcher>();
+					var store = new Store(dispatcher);
+					foreach (FeatureClassInfo featureClassInfo in featureClassInfos)
+					{
+						var feature = (IFeature)serviceProvider.GetRequiredService(featureClassInfo.FeatureInterfaceGenericType);
+						store.AddFeature(feature);
+					}
 
-				foreach (FeatureStateInfo featureStateInfo in featureStateInfos)
-				{
-					var feature = (IFeature)serviceProvider.GetService(featureStateInfo.FeatureInterfaceGenericType);
-					store.AddFeature(feature);
-				}
+					foreach (FeatureStateInfo featureStateInfo in featureStateInfos)
+					{
+						var feature = (IFeature)serviceProvider.GetRequiredService(featureStateInfo.FeatureInterfaceGenericType);
+						store.AddFeature(feature);
+					}
 
-				foreach (EffectClassInfo effectClassInfo in effectClassInfos)
-				{
-					var effect = (IEffect)serviceProvider.GetService(effectClassInfo.ImplementingType);
-					store.AddEffect(effect);
-				}
+					foreach (EffectClassInfo effectClassInfo in effectClassInfos)
+					{
+						var effect = (IEffect)serviceProvider.GetRequiredService(effectClassInfo.ImplementingType);
+						store.AddEffect(effect);
+					}
 
-				foreach (EffectMethodInfo effectMethodInfo in effectMethodInfos)
-				{
-					IEffect effect = EffectWrapperFactory.Create(serviceProvider, effectMethodInfo);
-					store.AddEffect(effect);
-				}
+					foreach (EffectMethodInfo effectMethodInfo in effectMethodInfos)
+					{
+						IEffect effect = EffectWrapperFactory.Create(serviceProvider, effectMethodInfo);
+						store.AddEffect(effect);
+					}
 
-				foreach (Type middlewareType in options.MiddlewareTypes)
-				{
-					var middleware = (IMiddleware)serviceProvider.GetService(middlewareType);
-					store.AddMiddleware(middleware);
-				}
+					foreach (Type middlewareType in options.MiddlewareTypes)
+					{
+						var middleware = (IMiddleware)serviceProvider.GetRequiredService(middlewareType);
+						store.AddMiddleware(middleware);
+					}
 
-				return store;
-			},
-			options);
+					return store;
+				},
+				options);
 
 		}
 	}

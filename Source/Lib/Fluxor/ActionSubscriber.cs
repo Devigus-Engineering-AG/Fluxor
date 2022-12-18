@@ -10,7 +10,6 @@ namespace Fluxor
 		private readonly Dictionary<object, List<ActionSubscription>> SubscriptionsForInstance = new();
 		private readonly Dictionary<Type, List<ActionSubscription>> SubscriptionsForType = new();
 
-
 		public IDisposable GetActionUnsubscriberAsIDisposable(object subscriber) =>
 			new DisposableCallback(
 				id: $"{nameof(ActionSubscriber)}.{nameof(GetActionUnsubscriberAsIDisposable)}",
@@ -48,14 +47,14 @@ namespace Fluxor
 
 			lock (SyncRoot)
 			{
-				if (!SubscriptionsForInstance.TryGetValue(subscriber, out List<ActionSubscription> instanceSubscriptions))
+				if (!SubscriptionsForInstance.TryGetValue(subscriber, out List<ActionSubscription>? instanceSubscriptions))
 				{
 					instanceSubscriptions = new List<ActionSubscription>();
 					SubscriptionsForInstance[subscriber] = instanceSubscriptions;
 				}
 				instanceSubscriptions.Add(subscription);
 
-				if (!SubscriptionsForType.TryGetValue(typeof(TAction), out List<ActionSubscription> typeSubscriptions))
+				if (!SubscriptionsForType.TryGetValue(typeof(TAction), out List<ActionSubscription>? typeSubscriptions))
 				{
 					typeSubscriptions = new List<ActionSubscription>();
 					SubscriptionsForType[typeof(TAction)] = typeSubscriptions;
@@ -69,10 +68,9 @@ namespace Fluxor
 			if (subscriber is null)
 				throw new ArgumentNullException(nameof(subscriber));
 
-			List<ActionSubscription> instanceSubscriptions;
 			lock (SyncRoot)
 			{
-				if (!SubscriptionsForInstance.TryGetValue(subscriber, out instanceSubscriptions))
+				if (!SubscriptionsForInstance.TryGetValue(subscriber, out List<ActionSubscription>? instanceSubscriptions))
 					return;
 
 				IEnumerable<object> subscribedInstances =
@@ -87,9 +85,9 @@ namespace Fluxor
 
 				foreach (Type actionType in subscribedActionTypes)
 				{
-					List<ActionSubscription> actionTypeSubscriptions;
-					if (!SubscriptionsForType.TryGetValue(actionType, out actionTypeSubscriptions))
+					if (!SubscriptionsForType.TryGetValue(actionType, out List<ActionSubscription>? actionTypeSubscriptions))
 						continue;
+
 					SubscriptionsForType[actionType] = actionTypeSubscriptions
 						.Except(instanceSubscriptions)
 						.ToList();

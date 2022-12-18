@@ -9,10 +9,15 @@ namespace Fluxor.DependencyInjection.WrapperFactories
 			IServiceProvider serviceProvider,
 			EffectMethodInfo info)
 		{
+			if (serviceProvider is null)
+				throw new ArgumentNullException(nameof(serviceProvider));
+			if (info is null)
+				throw new ArgumentNullException(nameof(info));
+
 			Type actionType = info.ActionType;
 
 			Type hostClassType = info.HostClassType;
-			object effectHostInstance = info.MethodInfo.IsStatic
+			object? effectHostInstance = info.MethodInfo.IsStatic
 				? null
 				: serviceProvider.GetService(hostClassType);
 
@@ -20,7 +25,7 @@ namespace Fluxor.DependencyInjection.WrapperFactories
 			var result = (IEffect)Activator.CreateInstance(
 				classGenericType,
 				effectHostInstance,
-				info);
+				info)!;
 			return result;
 		}
 	}

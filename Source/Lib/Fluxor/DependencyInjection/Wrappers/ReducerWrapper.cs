@@ -11,7 +11,11 @@ namespace Fluxor.DependencyInjection.Wrappers
 		TState IReducer<TState>.Reduce(TState state, object action) => Reduce(state, (TAction)action);
 		bool IReducer<TState>.ShouldReduceStateForAction(object action) => action is TAction;
 
-		public ReducerWrapper() { }
+		public ReducerWrapper()
+		{
+			Reduce = (state, action) => throw new InvalidOperationException($"{nameof(Reduce)} has not been set");
+		}
+
 		public ReducerWrapper(
 			object reducerHostInstance,
 			ReducerMethodInfo reducerMethodInfos)

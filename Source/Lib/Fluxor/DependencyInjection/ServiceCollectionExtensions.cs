@@ -24,7 +24,7 @@ namespace Fluxor
 		///	</example>
 		public static IServiceCollection AddFluxor(
 			this IServiceCollection services,
-			Action<FluxorOptions> configure = null)
+			Action<FluxorOptions>? configure = null)
 		{
 			// We only use an instance so middleware can create extensions to the Options
 			var options = new FluxorOptions(services);

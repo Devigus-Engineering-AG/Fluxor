@@ -7,10 +7,12 @@ namespace Fluxor.DependencyInjection.Wrappers
 		private readonly string Name;
 		private readonly Func<object> CreateInitialStateFunc;
 
-		public FeatureStateWrapper(
-			FeatureStateInfo info)
+		public FeatureStateWrapper(FeatureStateInfo info)
 		{
-			Name = info.FeatureStateAttribute.Name ?? typeof(TState).FullName;
+			if (info is null)
+				throw new ArgumentNullException(nameof(info));
+
+			Name = info.FeatureStateAttribute.Name ?? typeof(TState).FullName ?? typeof(TState).ToString();
 			MaximumStateChangedNotificationsPerSecond = info.FeatureStateAttribute.MaximumStateChangedNotificationsPerSecond;
 			CreateInitialStateFunc = info.CreateInitialStateFunc;
 		}

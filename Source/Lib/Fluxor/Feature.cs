@@ -17,7 +17,7 @@ namespace Fluxor
 		public abstract string GetName();
 
 		/// <see cref="IFeature.GetState"/>
-		public virtual object GetState() => State;
+		public virtual object? GetState() => State;
 
 		/// <see cref="IFeature.RestoreState(object)"/>
 		public virtual void RestoreState(object value) => State = (TState)value;
@@ -48,8 +48,8 @@ namespace Fluxor
 			TriggerStateChangedCallbacksThrottler = new(TriggerStateChangedCallbacks);
 		}
 
-		private EventHandler _StateChanged;
-		public event EventHandler StateChanged
+		private EventHandler? _StateChanged;
+		public event EventHandler? StateChanged
 		{
 			add
 			{

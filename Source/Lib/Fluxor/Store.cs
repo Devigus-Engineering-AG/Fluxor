@@ -12,6 +12,8 @@ namespace Fluxor
 		public IReadOnlyDictionary<string, IFeature> Features => FeaturesByName;
 		/// <see cref="IStore.Initialized"/>
 		public Task Initialized => InitializedCompletionSource.Task;
+		/// <see cref="IStore.UnhandledException"/>
+		public event EventHandler<Exceptions.UnhandledExceptionEventArgs>? UnhandledException;
 
 		private object SyncRoot = new object();
 		private bool Disposed;
@@ -92,7 +94,7 @@ namespace Fluxor
 		/// <see cref="IStore.BeginInternalMiddlewareChange"/>
 		public IDisposable BeginInternalMiddlewareChange()
 		{
-			IDisposable[] disposables = null;
+			IDisposable[] disposables;
 			lock (SyncRoot)
 			{
 				BeginMiddlewareChangeCount++;
@@ -113,8 +115,6 @@ namespace Fluxor
 				return;
 			await ActivateStoreAsync();
 		}
-
-		public event EventHandler<Exceptions.UnhandledExceptionEventArgs> UnhandledException;
 
 		/// <see cref="IActionSubscriber.SubscribeToAction{TAction}(object, Action{TAction})"/>
 		public void SubscribeToAction<TAction>(object subscriber, Action<TAction> callback)
@@ -142,7 +142,7 @@ namespace Fluxor
 		}
 
 
-		private void ActionDispatched(object sender, ActionDispatchedEventArgs e)
+		private void ActionDispatched(object? sender, ActionDispatchedEventArgs e)
 		{
 			lock (SyncRoot)
 			{

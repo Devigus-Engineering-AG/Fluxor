@@ -8,22 +8,22 @@ namespace Fluxor.DependencyInjection
 	internal class AssemblyScanSettings
 	{
 		public readonly Assembly Assembly;
-		public readonly string Namespace;
+		public readonly string? Namespace;
 
 		public AssemblyScanSettings(Assembly assembly) : this(assembly, null) { }
 
-		public AssemblyScanSettings(Assembly assembly, string @namespace)
+		public AssemblyScanSettings(Assembly assembly, string? @namespace)
 		{
 			Assembly = assembly ?? throw new ArgumentNullException(nameof(assembly));
 			Namespace = @namespace;
 		}
 
 		public bool Matches(Type type) =>
-			type.Assembly == Assembly
+			type?.Assembly == Assembly
 			&&
 			(
 				Namespace is null
-				|| type.FullName.StartsWith(Namespace + ".", StringComparison.InvariantCultureIgnoreCase)
+				|| type?.FullName?.StartsWith(Namespace + ".", StringComparison.InvariantCultureIgnoreCase) == true
 			);
 
 		public static Type[] FilterClasses(
@@ -55,7 +55,7 @@ namespace Fluxor.DependencyInjection
 					.Select(m => new TypeAndMethodInfo(x.Type, m)))
 				.ToArray();
 
-		public override bool Equals(object obj)
+		public override bool Equals(object? obj)
 		{
 			var other = obj as AssemblyScanSettings;
 			if (other is null)

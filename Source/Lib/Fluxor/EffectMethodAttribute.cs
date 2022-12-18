@@ -49,7 +49,7 @@ namespace Fluxor
 	[AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
 	public class EffectMethodAttribute : Attribute
 	{
-		public Type ActionType { get; private set; }
+		public Type? ActionType { get; private set; }
 
 		///	<summary>
 		///		Identifies a method with signature (object action, IDispatcher dispatcher) => Task as an effect method

@@ -9,11 +9,16 @@ namespace Fluxor.DependencyInjection.WrapperFactories
 			IServiceProvider serviceProvider,
 			ReducerMethodInfo info)
 		{
+			if (serviceProvider is null)
+				throw new ArgumentNullException(nameof(serviceProvider));
+			if (info is null)
+				throw new ArgumentNullException(nameof(info));
+
 			Type stateType = info.StateType;
 			Type actionType = info.ActionType;
 
 			Type hostClassType = info.HostClassType;
-			object reducerHostInstance = info.MethodInfo.IsStatic
+			object? reducerHostInstance = info.MethodInfo.IsStatic
 				? null
 				: serviceProvider.GetService(hostClassType);
 
@@ -21,7 +26,7 @@ namespace Fluxor.DependencyInjection.WrapperFactories
 			var result = Activator.CreateInstance(
 				classGenericType,
 				reducerHostInstance,
-				info);
+				info)!;
 			return result;
 		}
 	}

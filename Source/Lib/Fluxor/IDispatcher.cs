@@ -18,6 +18,6 @@ namespace Fluxor
 		/// <summary>
 		/// An event that is triggered whenever <see cref="Dispatch(object)"/> is executed.
 		/// </summary>
-		event EventHandler<ActionDispatchedEventArgs> ActionDispatched;
+		event EventHandler<ActionDispatchedEventArgs>? ActionDispatched;
 	}
 }

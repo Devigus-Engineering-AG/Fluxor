@@ -39,7 +39,7 @@ namespace Fluxor
 	///	[AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
 	public class ReducerMethodAttribute : Attribute
 	{
-		public Type ActionType { get; private set; }
+		public Type? ActionType { get; private set; }
 
 		///	<summary>
 		///		Identifies a method with signature (SomeState originalState, object Action) => SomeState as a reducer method

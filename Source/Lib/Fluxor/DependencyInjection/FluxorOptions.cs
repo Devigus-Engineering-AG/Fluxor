@@ -123,7 +123,7 @@ namespace Fluxor.DependencyInjection
 
 			Services.Add(typeof(TMiddleware), this);
 			Assembly assembly = typeof(TMiddleware).Assembly;
-			string @namespace = typeof(TMiddleware).Namespace;
+			string? @namespace = typeof(TMiddleware).Namespace;
 
 			AssembliesToScan = new List<AssemblyScanSettings>(AssembliesToScan)
 			{

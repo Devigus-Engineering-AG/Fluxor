@@ -17,6 +17,17 @@ namespace Fluxor.DependencyInjection
 			IEnumerable<AssemblyScanSettings> assembliesToScan,
 			IEnumerable<AssemblyScanSettings> scanIncludeList)
 		{
+			if (services is null)
+				throw new ArgumentNullException(nameof(services));
+			if (options is null)
+				throw new ArgumentNullException(nameof(options));
+			if (typesToScan is null)
+				throw new ArgumentNullException(nameof(typesToScan));
+			if (assembliesToScan is null)
+				throw new ArgumentNullException(nameof(assembliesToScan));
+			if (scanIncludeList is null)
+				throw new ArgumentNullException(nameof(scanIncludeList));
+
 			int totalScanSources = 0;
 			totalScanSources += assembliesToScan?.Count() ?? 0;
 			totalScanSources += typesToScan?.Count() ?? 0;
@@ -25,8 +36,8 @@ namespace Fluxor.DependencyInjection
 				throw new ArgumentException($"Must supply either {typesToScan} or {assembliesToScan}");
 
 			GetCandidateTypes(
-				assembliesToScan: assembliesToScan,
-				typesToScan: typesToScan,
+				assembliesToScan: assembliesToScan!,
+				typesToScan: typesToScan!,
 				scanIncludeList: scanIncludeList ?? new List<AssemblyScanSettings>(),
 				allCandidateTypes: out Type[] allCandidateTypes,
 				allNonAbstractCandidateTypes: out Type[] allNonAbstractCandidateTypes);
